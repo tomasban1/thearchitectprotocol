@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE ARCHITECT'S TRIAGE DOSSIER // V6.0</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --panel: #0a0c0e;
+      --cyan: #00f0ff;
+      --cyan-dim: rgba(0, 240, 255, 0.15);
+      --red: #ff2a54;
+      --amber: #ffaa00;
+      --green: #00ff88;
+      --text: #d0d8e0;
+      --muted: #6c7a89;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', Courier, monospace;
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+      background-image: radial-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .terminal-card {
+      background: var(--panel);
+      border: 1px solid var(--cyan);
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.06);
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid var(--cyan-dim);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      letter-spacing: 1px;
+    }
+    h1 {
+      font-size: 1.38rem;
+      color: #fff;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    h2 {
+      font-size: 1.08rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    p {
+      font-size: 0.94rem;
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+    .alert-banner {
+      border-left: 3px solid var(--red);
+      background: rgba(255, 42, 84, 0.06);
+      padding: 16px;
+      margin: 16px 0;
+    }
+    .contradiction-banner {
+      border-left: 3px solid var(--amber);
+      background: rgba(255, 170, 0, 0.07);
+      padding: 14px;
+      margin: 14px 0;
+      font-size: 0.9rem;
+      color: #ffe0a3;
+    }
+    .unlock-banner {
+      border: 1px solid var(--green);
+      border-left: 4px solid var(--green);
+      background: rgba(0, 255, 136, 0.06);
+      color: var(--green);
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      font-size: 0.88rem;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    .module-card {
+      background: #07090b;
+      border: 1px solid var(--cyan-dim);
+      padding: 22px;
+      margin-bottom: 18px;
+      position: relative;
+      transition: all 0.25s ease;
+    }
+    .module-card.active-one {
+      border: 1px solid var(--red);
+      box-shadow: 0 0 20px rgba(255, 42, 84, 0.12);
+    }
+    .module-card.active-two {
+      border: 1px solid var(--amber);
+      box-shadow: 0 0 15px rgba(255, 170, 0, 0.08);
+    }
+    .module-card.unlocked-card {
+      border: 1px solid var(--cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.08);
+    }
+    .module-card.standby-card {
+      opacity: 0.5;
+      border: 1px dashed var(--muted);
+      background: rgba(10, 12, 14, 0.45);
+      padding: 16px 20px;
+    }
+    .module-card.standby-card h2 {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .module-card.standby-card .module-body {
+      display: none !important;
+    }
+    .lock-notice {
+      display: none;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+    }
+    .module-card.standby-card .lock-notice {
+      display: block;
+    }
+    .warning-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+      background: var(--red);
+      color: #000;
+    }
+    .rule-box {
+      background: #030405;
+      border-left: 2px solid var(--cyan);
+      padding: 14px;
+      margin: 14px 0;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+    .limit-note {
+      font-size: 0.85rem;
+      color: var(--amber);
+      margin-top: 12px;
+      border-top: 1px dashed rgba(255, 170, 0, 0.25);
+      padding-top: 10px;
+      line-height: 1.5;
+    }
+    .checklist-group {
+      margin-top: 16px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: #040506;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      user-select: none;
+      line-height: 1.45;
+    }
+    .check-item input {
+      accent-color: var(--cyan);
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .check-item.completed {
+      border-color: var(--green);
+      color: var(--green);
+      text-decoration: line-through;
+      opacity: 0.8;
+    }
+    .ascension-box {
+      border: 2px solid var(--cyan);
+      background: linear-gradient(180deg, rgba(0,240,255,0.06) 0%, rgba(5,5,5,0.95) 100%);
+      padding: 30px;
+      margin-top: 32px;
+    }
+    .btn-cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: var(--cyan);
+      color: #000;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 16px;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 20px;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-cta:hover {
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+      transform: translateY(-1px);
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="terminal-card">
+    <div class="header-bar">
+      <span>DOCUMENT // ARCHITECT_TRIAGE_DOSSIER_V6.0</span>
+      <span id="score-badge">RAW SCORE: --/15</span>
+    </div>
+    <h1 id="dossier-heading">72-Hour Emergency Lockdown Dossier</h1>
+    <p>When a maximum-security block riots, you do not renovate the facility while the fires are burning. First, you slam the steel doors shut, cut the dayroom sedation, and enforce a strict lockdown on your highest-priority breaches.</p>
+    <div class="alert-banner">
+      <p id="triage-directive" style="margin-bottom:0; font-weight:bold;">INITIALIZING DOSSIER TELEMETRY...</p>
+    </div>
+    <div id="believer-warning" class="contradiction-banner hidden"></div>
+    <p style="margin-bottom:0; font-size:0.86rem; color:var(--muted);">> BOOKMARK THIS URL. Your 72-hour lockdown checkboxes below save automatically to this device. Complete all Active Module tasks to unlock queued sectors.</p>
+  </div>
+
+  <div id="unlock-banner" class="unlock-banner hidden">
+    > PRIMARY CONTAINMENT VERIFIED: ALL ACTIVE TRIAGE TASKS LOGGED. STANDBY SECTORS UNLOCKED BELOW.
+  </div>
+
+  <div id="modules-container"></div>
+
+  <div class="ascension-box">
+    <div class="warning-tag">CRITICAL WARNING // THE HOUR-73 RELAPSE</div>
+    <h2>Why a 72-Hour Lockdown Is Not a Permanent Escape</h2>
+    <p>This Triage Dossier is an emergency tourniquet. It stops the immediate bleeding and proves that you still possess the raw Will to override your impulses for 72 hours.</p>
+    <p><strong>Here is the cold mechanical reality:</strong> You cannot live in an emergency lockdown forever. On Day 4, when you step back out into the Circus without a rebuilt operating system, your old neural pathways will pull you right back into the cage.</p>
+    <p>To go from temporary containment to permanent sovereignty, you must replace the corrupted code at the root:</p>
+    <div class="rule-box">
+      <div><strong>[01] PERMANENT DOPAMINE RE-ENGINEERING:</strong> Transitioning from cold-turkey lockdowns to the Permanent Dopamine Replacement Schedule and Target Fixation blocks.</div>
+      <div style="margin-top:8px;"><strong>[02] FORENSIC COGNITIVE & TELEMETRY ARCHITECTURE:</strong> Dismantling the corrupted files exposed during Solitary Audits and automating composure under real-world chaos.</div>
+      <div style="margin-top:8px;"><strong>[03] THE TRINITY-OF-TRINITIES BLUEPRINT:</strong> Sovereign Frame Control, dismantling false idols, and aligning your hardware, firmware, and mission under the Ultimate Architect.</div>
+    </div>
+    <a href="https://your-checkout-link-here" class="btn-cta">[ ACCESS THE FULL ARCHITECT'S PROTOCOL ]</a>
+  </div>
+</div>
+
+<script>
+  var requiredCheckIds = [];
+
+  function buildModules(anchorBranch, hasOtherBreaches) {
+    var mod05Option1 = {
+      id: "MOD_05_ANCHOR",
+      title: "MODULE 05 // PROTOCOL 05: THE SOURCE CODE PING (THE FALSIFICATION TEST)",
+      mechanism: "THE MECHANISM: You believe you operate as your own master, yet every human machine bows to a supreme authority. Whatever variable, status symbol, or comfort mechanism you serve, protect, and compromise your integrity to keep. That may be status, money, approval, or comfort, whatever it is, it's your functional god. When you anchor yourself to finite, shifting variables that can be bought, sold, or revoked, your internal stability shifts with them. True autonomy requires anchoring to an immutable authority outside the system.",
+      drill: "THE 72-HOUR OVERRIDE (THE BLIND PING & IDOL AUDIT):\nFor the next 3 nights, in the final 10 minutes before sleep, sit in dead silence and execute two steps in strict sequence:\n\n1. The Idol Audit (Minutes 00–05): Write down what you base your integrity on, and what you actually obey when your integrity is tested. Look at what you wrote: is that thing making your integrity stable, or dependable on your desires and current situation? Can your functional god be bought, sold, or taken from you?\n\n2. The Falsification Test (Minutes 05–10): Sit in stillness, search yourself deeply, and drop all intellectual posturing. Even if you believe the room is empty, speak out loud with zero theatrics: 'God, I do not believe You exist, but if You are real, I want to know You. Show me You are real in a way I cannot dismiss.' Mean this genuinely when you say it, and walk through the next 24 hours with open eyes. If nothing happens, you lose five minutes. If you refuse to run the test, admit you are afraid of the answer.",
+      limit: "THE LIMIT: Running the Falsification Test initiates the ping, but an uncalibrated or closed mind will rationalize the response as coincidence. The Full Protocol delivers the complete forensic framework for dismantling false idols and locking your Will onto an unbreakable anchor.",
+      tasks: [
+        "NIGHT 01 (IDOL EXTRACTION): Sit 10 mins in dead silence before sleep — Write down the #1 thing you compromise your integrity to protect (05 mins) + Speak the Falsification Test out loud (05 mins).",
+        "NIGHT 02 (MORTALITY TEST): Sit 10 mins in dead silence — Audit yesterday's written idol (write how easily it can be bought, revoked, or destroyed) + Speak the Falsification Test out loud.",
+        "NIGHT 03 (FINAL PING): Sit 10 mins in dead silence — Execute final spoken Falsification Test with zero intellectual posturing + Write down any resistance, fear, or anomaly observed over the 72 hours."
+      ]
+    };
+
+    var mod05Option2 = {
+      id: "MOD_05_ANCHOR",
+      title: "MODULE 05 // PROTOCOL 05: THE GENESIS CALIBRATION (LOGOS INTERROGATION)",
+      mechanism: hasOtherBreaches
+        ? "THE MECHANISM: A closed system cannot calibrate itself. You stated in your diagnostic that you submit to an eternal Creator—yet your breaches in other sectors prove there is a fracture between your stated creed and your daily wiring. When your ego or cheap comfort still governs your habits, your standards shift with your neurochemistry; only active vertical submission to an immutable Creator gives the Will an unbreakable horizontal frame."
+        : "THE MECHANISM: A closed system cannot calibrate itself. When your ego or society sits at the top of your hierarchy, your standards shift with your neurochemistry; only vertical submission to an immutable Creator gives the Will an unbreakable horizontal frame.",
+      drill: "THE 72-HOUR OVERRIDE (THE LOGOS INTERROGATION): For 15 minutes each morning before touching any digital device, read one chapter of Proverbs and John 1:1–14 as an objective structural text. Follow immediately with 5 minutes of silent, non-performative prayer asking the Creator to expose the exact lies and compromises you are currently defending.",
+      limit: "THE LIMIT: This 72-hour calibration initiates contact with the Source Code. The Full Protocol delivers the complete Trinity-of-Trinities blueprint to align your hardware, firmware, and mission under the Ultimate Architect.",
+      tasks: [
+        "DAY 01 (SOURCE AUDIT): Before touching any screen, read 1 chapter of Proverbs and John 1:1–14 (15 mins) + 5 mins silent prayer asking God to expose one defended compromise.",
+        "DAY 02 (COMPROMISE ISOLATION): Execute 15-min morning Logos Interrogation + Write down the exact sin, habit, or excuse surfaced during prayer and the trigger feeding it.",
+        "DAY 03 (STRUCTURAL SEVERANCE): Execute 15-min morning Logos Interrogation + Physically remove the trigger feeding Day 02's compromise before 12:00."
+      ]
+    };
+
+    return [
+      {
+        id: "MOD_01_DOPAMINE",
+        title: "MODULE 01 // PROTOCOL 01: THE INDUCTION BREAK (DOPAMINE ARCHITECTURE)",
+        mechanism: "THE MECHANISM: Short-form feeds strip away natural stopping cues and flood your striatum with unpredictable dopamine spikes, down-regulating your baseline receptors. Like a television bolted to a prison pod wall, synthetic stimulation sedates your Will so you never breach the perimeter.",
+        drill: "THE 72-HOUR OVERRIDE (THE 60/60 BLACKOUT): Enter a 72-hour zero-algorithmic-feed lockdown—no TikTok, Reels, Shorts, or infinite scroll. Charge your phone physically outside your bedroom to enforce zero screen input for the first 60 minutes awake and the final 60 minutes before sleep.",
+        limit: "THE LIMIT: A 72-hour fast starves the parasite, but an unscheduled brain will relapse the moment the lockdown ends. The Full Protocol installs the Permanent Dopamine Replacement Schedule and Target Fixation execution blocks.",
+        tasks: [
+          "DAY 01 (PERIMETER LOCK): Delete short-form apps from your home screen + Plug phone charger in outside your bedroom before 22:00 (enforce 60/60 Blackout).",
+          "DAY 02 (URGE OVERRIDE): Maintain 60/60 Blackout + Every time your hand reaches for a feed out of boredom, drop and execute push-ups to mechanical failure.",
+          "DAY 03 (STIMULUS REPLACEMENT): Maintain the two previous directives + Take a walk with no devices, to contemplate the results of the last two days and what they taught you about yourself."
+        ]
+      },
+      {
+        id: "MOD_02_SOLITARY",
+        title: "MODULE 02 // PROTOCOL 02: THE ISOLATION CELL DRILL (SOLITARY TOLERANCE)",
+        mechanism: "THE MECHANISM: When external stimulation stops, your brain activates its Default Mode Network, bringing suppressed anxieties to the surface. Sitting in silence is where an uncalibrated brain panics—yet it is also the exact environment where peace, creative ideas, and strategic solutions are born.",
+        drill: "THE 72-HOUR OVERRIDE (20-MINUTE SOLITARY AUDIT): Once per day for 3 days, sit in a silent room for 20 minutes with only a blank sheet of paper and a pen.\n\nSide A (Minutes 00–10 — The Noise): Log every anxious loop, excuse, or avoided obligation that surfaces when the background noise is cut.\nSide B (Minutes 10–20 — The Provision): Flip the paper over and write down the tangible realities and provisions you are genuinely grateful for. Observe which side of the paper generates chaos and which generates peace—and lock your focus onto Side B every day. The goal of this exercise is for you to learn, that it is physically impossible to be anxious and grateful at the same time.",
+        limit: "THE LIMIT: Solitary confinement exposes corrupted files, but exposure alone does not overwrite them. The Full Protocol provides the forensic cognitive framework to systematically dismantle what surfaces on that page.",
+        tasks: [
+          "DAY 01 (EXPOSURE): Sit 20 mins in dead silence with pen and paper — Write every anxious loop on Side A (10 mins), flip, and log what you are grateful to have on Side B (10 mins).",
+          "DAY 02 (INTERROGATION): Repeat the 20-min Side A / Side B Solitary Audit + Cross out every anxious loop on Side A that is an unproven feeling rather than a hard fact.",
+          "DAY 03 (DEBT SETTLEMENT): Complete final 20-min Solitary Audit + Circle the #1 avoided obligation exposed on Side A and execute it as fast as possible."
+        ]
+      },
+      {
+        id: "MOD_03_TELEMETRY",
+        title: "MODULE 03 // PROTOCOL 03: WEAPONIZED DETACHMENT (EMOTIONAL TELEMETRY)",
+        mechanism: "THE MECHANISM: Failure triggers an amygdala hijack, flooding your hardware with cortisol and tricking you into equating a mechanical error with personal ruin. In reality, failure is raw telemetry—treat it as such.",
+        drill: "THE 72-HOUR OVERRIDE (THE FORENSIC POST-MORTEM): Select one recent failure you have been avoiding and write a three-line incident report stripped of all emotional adjectives. Log only: (1) The exact mechanical point of failure, (2) The miscalculated variable, and (3) One corrective action fully under your conscious control to execute for the next 72 hours to prove to your system that you hold command.",
+        limit: "THE LIMIT: Detaching from a single failure breaks current stagnation, but real-world chaos requires automated composure. The Full Protocol installs the complete Emotional Telemetry Architecture for high-pressure execution.",
+        tasks: [
+          "DAY 01 (FORENSIC REPORT): Write the 3-line zero-adjective Incident Report on paper (1. Mechanical failure point, 2. Miscalculated variable, 3. One 72-hr corrective action) & execute Day 1 of that action.",
+          "DAY 02 (MUTE SWITCH): Execute Day 2 of your corrective action + Enforce a 24-hour Verbal Ceasefire (zero spoken complaints, excuses, or emotional replay of the failure).",
+          "DAY 03 (STRESS PROOF): Complete Day 3 of your corrective action + Burn or discard the Incident Report and log the next objective target in writing."
+        ]
+      },
+      {
+        id: "MOD_04_TRIBAL",
+        title: "MODULE 04 // PROTOCOL 04: HERD SEVERANCE (TRIBAL COMPLIANCE)",
+        mechanism: "THE MECHANISM: Your brain processes social rejection in the anterior insula—the exact region that registers physical pain. The Circus exploits this biological hardware by weaponizing social shame, forcing you to validate lies just to avoid the sting of tribal exclusion.",
+        drill: "THE 72-HOUR OVERRIDE (THE ZERO-NOD FAST): For 72 hours, forbid yourself from validating any statement you disagree with. Do not fake a laugh, nod along to weak excuses, or soften your stance. When friction occurs, deploy dead silence instead of appeasement.",
+        limit: "THE LIMIT: Refusing to nod breaks passive compliance, but surviving sustained tribal backlash requires structural leverage. The Full Protocol teaches Sovereign Frame Control and high-trust alliance building.",
+        tasks: [
+          "DAY 01 (APPEASEMENT CUT): Enforce 24-hour Zero-Nod Fast — Eliminate all fake laughs, polite nods, and filler agreement phrases in every conversation today.",
+          "DAY 02 (FRICTION HOLD): Maintain Zero-Nod Fast + State one unfiltered factual disagreement out loud",
+          "DAY 03 (INSULA AUDIT): Complete 72-hour Zero-Nod Fast + Write down the exact person or room where you felt the strongest physical urge to fold for approval."
+        ]
+      },
+      anchorBranch === "BELIEVER" ? mod05Option2 : mod05Option1
+    ];
+  }
+
+  function createCardElement(mod, activeRank, isBreached, savedChecks) {
+    var isPrimaryActive = (activeRank === 0 || activeRank === 1);
+    var card = document.createElement('div');
+    var lockNotice = document.createElement('span');
+    lockNotice.className = 'lock-notice';
+
+    if (activeRank === 0) {
+      card.className = 'module-card active-one';
+    } else if (activeRank === 1) {
+      card.className = 'module-card active-two';
+    } else if (isBreached) {
+      card.className = 'module-card standby-card standby-target';
+      lockNotice.textContent = '> [ LOCKED // COMPLETE ALL ACTIVE TRIAGE CHECKBOXES ABOVE TO UNLOCK ]';
+    } else {
+      card.className = 'module-card standby-card standby-target';
+      lockNotice.textContent = '> [ MONITORED // COMPLETE ACTIVE TRIAGE CHECKBOXES ABOVE TO INSPECT PROTOCOL ]';
+    }
+
+    var titleEl = document.createElement('h2');
+    titleEl.textContent = mod.title;
+
+    var bodyEl = document.createElement('div');
+    bodyEl.className = 'module-body';
+
+    var mechEl = document.createElement('p');
+    mechEl.textContent = mod.mechanism;
+
+    var drillEl = document.createElement('div');
+    drillEl.className = 'rule-box';
+    drillEl.textContent = mod.drill;
+
+    var checkGroup = document.createElement('div');
+    checkGroup.className = 'checklist-group';
+
+    mod.tasks.forEach(function(taskText, idx) {
+      var checkId = mod.id + "_v6_task_" + idx;
+      if (isPrimaryActive) {
+        requiredCheckIds.push(checkId);
+      }
+      var isChecked = Boolean(savedChecks[checkId]);
+      var label = document.createElement('label');
+      label.className = isChecked ? 'check-item completed' : 'check-item';
+      label.id = 'label_' + checkId;
+
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = 'input_' + checkId;
+      input.checked = isChecked;
+      input.addEventListener('change', function() {
+        toggleTask(checkId, input.checked);
+      });
+
+      var span = document.createElement('span');
+      span.textContent = taskText;
+
+      label.appendChild(input);
+      label.appendChild(span);
+      checkGroup.appendChild(label);
+    });
+
+    var limitEl = document.createElement('div');
+    limitEl.className = 'limit-note';
+    limitEl.textContent = '> ' + mod.limit;
+
+    bodyEl.appendChild(mechEl);
+    bodyEl.appendChild(drillEl);
+    bodyEl.appendChild(checkGroup);
+    bodyEl.appendChild(limitEl);
+
+    card.appendChild(titleEl);
+    card.appendChild(lockNotice);
+    card.appendChild(bodyEl);
+
+    return card;
+  }
+
+  function initDossier() {
+    var params = new URLSearchParams(window.location.search);
+    var score = params.get('score');
+    var activeRaw = params.get('active');
+    var breachesRaw = params.get('breaches');
+    var anchor = params.get('anchor');
+    var mode = params.get('mode');
+
+    if (!score || !activeRaw) {
+      try {
+        var rawStorage = localStorage.getItem('architect_telemetry_v6');
+        var saved = rawStorage ? JSON.parse(rawStorage) : {};
+        score = score || saved.score || '4';
+        activeRaw = activeRaw || saved.active || 'MOD_01_DOPAMINE,MOD_02_SOLITARY';
+        breachesRaw = breachesRaw || saved.breaches || 'MOD_01_DOPAMINE,MOD_02_SOLITARY,MOD_03_TELEMETRY';
+        anchor = anchor || saved.anchor || 'SKEPTIC';
+        mode = mode || saved.mode || 'STANDARD_TRIAGE';
+      } catch (e) {
+        score = '4';
+        activeRaw = 'MOD_01_DOPAMINE,MOD_02_SOLITARY';
+        breachesRaw = 'MOD_01_DOPAMINE,MOD_02_SOLITARY,MOD_03_TELEMETRY';
+        anchor = 'SKEPTIC';
+        mode = 'STANDARD_TRIAGE';
+      }
+    }
+
+    var numericScore = parseInt(score, 10);
+    if (isNaN(numericScore)) {
+      numericScore = 4;
+    }
+    var isHighScorer = numericScore >= 12;
+    var pct = Math.round((numericScore / 15) * 100);
+    document.getElementById('score-badge').textContent = "SCORE: " + numericScore + "/15 (" + pct + "%)";
+
+    var activeList = activeRaw ? activeRaw.split(',').slice(0, 2) : ['MOD_01_DOPAMINE', 'MOD_02_SOLITARY'];
+    var breachList = (!breachesRaw || breachesRaw === 'NONE') ? [] : breachesRaw.split(',');
+    var hasOtherBreaches = breachList.some(function(id) { return id !== 'MOD_05_ANCHOR'; });
+
+    var directiveEl = document.getElementById('triage-directive');
+    var headingEl = document.getElementById('dossier-heading');
+    var believerWarnEl = document.getElementById('believer-warning');
+
+    if (mode === "NOMINAL_TRAP" || isHighScorer) {
+      headingEl.textContent = "Advanced Stress-Test Dossier (Score 12–15)";
+      directiveEl.textContent = "> EGO BLINDSPOT OVERRIDE: Because your surface discipline scored 12–15, standard triage has been bypassed. Execute Active Modules 02 and 05 below to stress-test your internal stillness and vertical foundation.";
+    } else {
+      directiveEl.textContent = "> ACTIVE TRIAGE CAP: Attempting to repair every compromised sector at once guarantees relapse. Your Dossier has isolated your top " + activeList.length + " priority emergency module(s) below. Execute and check off every active task to unlock your remaining sectors.";
+    }
+
+    if (anchor === "BELIEVER" && !isHighScorer && hasOtherBreaches) {
+      believerWarnEl.classList.remove('hidden');
+      believerWarnEl.textContent = "> SECTOR 05 ALIGNMENT CONTRADICTION: You selected Option [D] (Submission to an eternal Creator), yet your diagnostic exposed breaches in your daily discipline. Module 05 below has been configured to Option 2: The Genesis Calibration (Logos Interrogation) to close the gap between your stated faith and your daily habits.";
+    }
+
+    var allModules = buildModules(anchor, hasOtherBreaches);
+
+    var sortedModules = allModules.slice().sort(function(a, b) {
+      var idxA = activeList.indexOf(a.id);
+      var idxB = activeList.indexOf(b.id);
+      var aActive = idxA !== -1;
+      var bActive = idxB !== -1;
+      if (aActive && !bActive) return -1;
+      if (!aActive && bActive) return 1;
+      if (aActive && bActive) return idxA - idxB;
+      return 0;
+    });
+
+    var container = document.getElementById('modules-container');
+    container.innerHTML = '';
+
+    var savedChecks = {};
+    try {
+      var rawChecks = localStorage.getItem('architect_checks_v6');
+      savedChecks = rawChecks ? JSON.parse(rawChecks) : {};
+    } catch (e) {}
+
+    requiredCheckIds = [];
+
+    sortedModules.forEach(function(mod) {
+      var activeRank = activeList.indexOf(mod.id);
+      var isBreached = breachList.indexOf(mod.id) !== -1;
+      var card = createCardElement(mod, activeRank, isBreached, savedChecks);
+      container.appendChild(card);
+    });
+
+    evaluateUnlockState();
+  }
+
+  function toggleTask(checkId, isChecked) {
+    var label = document.getElementById('label_' + checkId);
+    if (label) {
+      if (isChecked) {
+        label.classList.add('completed');
+      } else {
+        label.classList.remove('completed');
+      }
+    }
+    try {
+      var rawChecks = localStorage.getItem('architect_checks_v6');
+      var savedChecks = rawChecks ? JSON.parse(rawChecks) : {};
+      savedChecks[checkId] = isChecked;
+      localStorage.setItem('architect_checks_v6', JSON.stringify(savedChecks));
+    } catch (e) {}
+
+    evaluateUnlockState();
+  }
+
+  function evaluateUnlockState() {
+    if (requiredCheckIds.length === 0) return;
+
+    var allActiveCompleted = requiredCheckIds.every(function(id) {
+      var el = document.getElementById('input_' + id);
+      return Boolean(el && el.checked);
+    });
+
+    var standbyCards = document.querySelectorAll('.standby-target');
+    var unlockBanner = document.getElementById('unlock-banner');
+
+    standbyCards.forEach(function(card) {
+      if (allActiveCompleted) {
+        card.classList.remove('standby-card');
+        card.classList.add('unlocked-card');
+      } else {
+        card.classList.add('standby-card');
+        card.classList.remove('unlocked-card');
+      }
+    });
+
+    if (unlockBanner) {
+      if (allActiveCompleted) {
+        unlockBanner.classList.remove('hidden');
+      } else {
+        unlockBanner.classList.add('hidden');
+      }
+    }
+  }
+
+  initDossier();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE ARCHITECT'S PROTOCOL // ADAPTIVE DIAGNOSTIC V6.0</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --panel: #0a0c0e;
+      --cyan: #00f0ff;
+      --cyan-dim: rgba(0, 240, 255, 0.15);
+      --red: #ff2a54;
+      --amber: #ffaa00;
+      --text: #d0d8e0;
+      --muted: #5a6570;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', Courier, monospace;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background-image: radial-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+    .terminal {
+      width: 100%;
+      max-width: 720px;
+      background: var(--panel);
+      border: 1px solid var(--cyan);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.08);
+      padding: 32px;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--cyan-dim);
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      letter-spacing: 1px;
+    }
+    .sys-line {
+      color: var(--cyan);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    h1 {
+      font-size: 1.35rem;
+      color: #fff;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    p {
+      line-height: 1.6;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+    .btn, .option-btn {
+      display: block;
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      padding: 14px 18px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      text-align: left;
+      cursor: pointer;
+      margin-bottom: 12px;
+      transition: all 0.15s ease;
+      line-height: 1.4;
+    }
+    .btn {
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 20px;
+    }
+    .btn:hover, .option-btn:hover {
+      background: var(--cyan);
+      color: var(--bg);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+    .progress {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .telemetry-box {
+      background: #050608;
+      border: 1px solid var(--cyan-dim);
+      padding: 16px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+    }
+    .telemetry-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+      padding-bottom: 6px;
+      gap: 10px;
+    }
+    .telemetry-row:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .status-crit { color: var(--red); font-weight: bold; }
+    .status-warn { color: var(--amber); }
+    .status-ok { color: var(--cyan); }
+    .status-alert {
+      border-left: 3px solid var(--red);
+      padding-left: 16px;
+      margin: 20px 0;
+    }
+    .prescription-box {
+      border: 1px solid var(--cyan);
+      background: rgba(0, 240, 255, 0.04);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .prescription-title {
+      color: var(--cyan);
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    input[type="email"] {
+      width: 100%;
+      background: #000;
+      border: 1px solid var(--cyan);
+      color: #fff;
+      padding: 14px;
+      font-family: inherit;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    input[type="email"]:focus {
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<div class="terminal">
+  <div class="header-bar">
+    <span>SYS // ARCHITECT_PROTOCOL_V6.0</span>
+    <span id="status-indicator">TELEMETRY: ONLINE</span>
+  </div>
+
+  <!-- SCREEN 1: BOOT -->
+  <div id="screen-boot">
+    <div class="sys-line">> INITIALIZING MULTI-VECTOR SYSTEM AUDIT...</div>
+    <h1>Baseline Diagnostic Terminal</h1>
+    <p>A generic solution cannot fix a specific structural collapse. While most men remain trapped in the Circus, the exact point of failure varies from machine to machine.</p>
+    <p>This 5-sector interrogation audits your architecture across Dopamine Control, Solitary Tolerance, Emotional Telemetry, Tribal Compliance, and your Vertical Anchor—isolating your two highest-priority breaches for immediate 72-hour lockdown.</p>
+    <button type="button" class="btn" id="start-btn">[ EXECUTE 5-SECTOR DIAGNOSTIC ]</button>
+  </div>
+
+  <!-- SCREEN 2: QUESTIONS -->
+  <div id="screen-quiz" class="hidden">
+    <div class="progress" id="progress-text">SECTOR 01 OF 05</div>
+    <h1 id="question-title">Question Title</h1>
+    <div id="options-container"></div>
+  </div>
+
+  <!-- SCREEN 3: ADAPTIVE RESULT & EMAIL GATE -->
+  <div id="screen-result" class="hidden">
+    <div class="sys-line">> TELEMETRY SCAN COMPLETE. ISOLATING PRIORITY BREACHES...</div>
+    <h1 id="result-title">SYSTEM AUDIT READOUT</h1>
+
+    <!-- LIVE SECTOR TELEMETRY MAP -->
+    <div class="telemetry-box" id="telemetry-map"></div>
+
+    <!-- PERSONALIZED DIAGNOSIS -->
+    <div class="status-alert" id="alert-box">
+      <p id="result-desc"></p>
+      <p id="secondary-desc" style="margin-bottom:0; font-size:0.88rem; color:#9aa5b1;"></p>
+    </div>
+
+    <!-- TAILORED FREE VALUE PRESCRIPTION -->
+    <div class="prescription-box">
+      <div class="prescription-title" id="prescription-name">> ASSIGNED TRIAGE QUEUE</div>
+      <div id="prescription-desc" style="font-size:0.9rem; line-height:1.55;"></div>
+    </div>
+
+    <form id="capture-form">
+      <input type="email" id="user-email" name="email" placeholder="ENTER EMAIL TO UNLOCK YOUR CUSTOM DOSSIER..." required />
+      <input type="hidden" id="active-modules-input" name="active_modules" value="" />
+      <input type="hidden" id="breach-list-input" name="breach_list" value="" />
+      <input type="hidden" id="anchor-type-input" name="anchor_type" value="" />
+      <input type="hidden" id="triage-mode-input" name="triage_mode" value="" />
+      <input type="hidden" id="total-score-input" name="total_score" value="" />
+      <button type="submit" class="btn" id="submit-btn">[ TRANSMIT & OPEN WEB DOSSIER ]</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const FORM_ENDPOINT = "https://app.loops.so/api/newsletter-form/cmqz4g1tp02nw0j2tw5b1ekxq";
+
+  const sectors = [
+    {
+      id: "MOD_01_DOPAMINE",
+      triagePriority: 1,
+      label: "SECTOR 01 // DOPAMINE ARCHITECTURE",
+      shortName: "01 // DOPAMINE ARCHITECTURE",
+      protocolTitle: "PROTOCOL 01: THE INDUCTION BREAK (60/60 BLACKOUT)",
+      q: "Within the first 20 minutes of waking up, or whenever a task becomes repetitive, what is your physical reflex?",
+      options: [
+        { text: "[ A ] I reach for my phone to check notifications, feeds, or messages before starting my day.", score: 0 },
+        { text: "[ B ] I delay checking my phone at wake-up, but rely on background audio or media to get through routine work.", score: 1 },
+        { text: "[ C ] Zero digital input for the first 60 minutes. Every screen interaction is scheduled and intentional.", score: 3 }
+      ],
+      singleDiagnosis: "PRIMARY BREACH: DOPAMINE SEDATION. Short-form feeds strip away natural stopping cues and flood your striatum with unpredictable dopamine spikes, down-regulating your baseline receptors. Like a television bolted to a prison pod wall, synthetic stimulation is sedating your Will."
+    },
+    {
+      id: "MOD_02_SOLITARY",
+      triagePriority: 2,
+      label: "SECTOR 02 // SOLITARY TOLERANCE",
+      shortName: "02 // SOLITARY TOLERANCE",
+      protocolTitle: "PROTOCOL 02: THE ISOLATION CELL DRILL (SOLITARY AUDIT)",
+      q: "If locked in a silent room for 60 minutes with zero screens, music, or reading material, what happens to your internal state?",
+      options: [
+        { text: "[ A ] Physical restlessness sets in quickly; I strongly prefer having podcasts, music, or tasks running at all times.", score: 0 },
+        { text: "[ B ] I can sit through it, but my attention drifts into circular worries, past regrets, or random daydreams.", score: 1 },
+        { text: "[ C ] Total stillness. I use unstimulated silence to audit my decisions and lock onto my next objective.", score: 3 }
+      ],
+      singleDiagnosis: "PRIMARY BREACH: SOLITARY FRACTURE. When external stimulation stops, your brain activates its Default Mode Network, dragging suppressed anxieties to the surface. You are using background noise as anesthesia so you do not have to confront your internal state."
+    },
+    {
+      id: "MOD_03_TELEMETRY",
+      triagePriority: 3,
+      label: "SECTOR 03 // EMOTIONAL TELEMETRY",
+      shortName: "03 // EMOTIONAL TELEMETRY",
+      protocolTitle: "PROTOCOL 03: WEAPONIZED DETACHMENT (FORENSIC POST-MORTEM)",
+      q: "When a high-stakes plan collapses or you face public failure, how does your system process the impact?",
+      options: [
+        { text: "[ A ] Heavy frustration or mental replay; the setback disrupts my momentum and clouds my focus for days.", score: 0 },
+        { text: "[ B ] I absorb the emotional hit for 24 to 48 hours before forcing myself back onto the objective.", score: 1 },
+        { text: "[ C ] Immediate detachment. I treat the pain as raw telemetry, isolate the mechanical error, and re-engage.", score: 3 }
+      ],
+      singleDiagnosis: "PRIMARY BREACH: TELEMETRY DRIFT. Failure triggers an amygdala hijack, flooding your hardware with cortisol and tricking you into equating a mechanical error with personal ruin. You are processing setbacks through emotion rather than treating them as raw data."
+    },
+    {
+      id: "MOD_04_TRIBAL",
+      triagePriority: 4,
+      label: "SECTOR 04 // TRIBAL COMPLIANCE",
+      shortName: "04 // TRIBAL COMPLIANCE",
+      protocolTitle: "PROTOCOL 04: HERD SEVERANCE (THE ZERO-NOD FAST)",
+      q: "When your peer group or workplace pushes a narrative you know is false, what is your default response?",
+      options: [
+        { text: "[ A ] I vocalize agreement or mirror the room to keep friction low and protect my standing.", score: 0 },
+        { text: "[ B ] I withhold my agreement and stay quiet to avoid an unproductive confrontation.", score: 1 },
+        { text: "[ C ] I state my disagreement calmly, regardless of social friction or loss of approval.", score: 3 }
+      ],
+      singleDiagnosis: "PRIMARY BREACH: TRIBAL COMPLIANCE. Your brain processes social rejection in the anterior insula—the exact region that registers physical pain. The Circus is exploiting this hardware by weaponizing social shame, forcing you into passive compliance."
+    },
+    {
+      id: "MOD_05_ANCHOR",
+      triagePriority: 5,
+      label: "SECTOR 05 // THE VERTICAL ANCHOR",
+      shortName: "05 // THE VERTICAL ANCHOR",
+      protocolTitle: "PROTOCOL 05: THE SOURCE CODE PING (FALSIFICATION TEST)",
+      q: "Every human machine obeys a supreme authority. In practice, what dictates your daily standards when no one is watching?",
+      options: [
+        { text: "[ A ] My immediate biological state—what relieves stress, feels urgent, or brings comfort in the moment.", score: 0, anchor: "SKEPTIC" },
+        { text: "[ B ] External expectations—the standards and approval of my peers, career, or culture.", score: 0, anchor: "SKEPTIC" },
+        { text: "[ C ] My own intellect—I set my own rules in an accidental universe and adjust them when I want to.", score: 1, anchor: "SKEPTIC" },
+        { text: "[ D ] Objective submission to an eternal Creator (God) whose law stands outside of time and human opinion.", score: 3, anchor: "BELIEVER" }
+      ],
+      singleDiagnosis: "PRIMARY BREACH: UNANCHORED ARCHITECTURE. You believe you operate as your own master, yet you still bow to finite variables—status, comfort, approval, or ego. When you anchor yourself to shifting variables, your internal stability shifts with them."
+    }
+  ];
+
+  let currentIdx = 0;
+  let userScores = [];
+  let selectedAnchor = "SKEPTIC";
+
+  document.getElementById('start-btn').addEventListener('click', startAudit);
+  document.getElementById('capture-form').addEventListener('submit', handleCapture);
+
+  function startAudit() {
+    currentIdx = 0;
+    userScores = [];
+    selectedAnchor = "SKEPTIC";
+    document.getElementById('screen-boot').classList.add('hidden');
+    document.getElementById('screen-quiz').classList.remove('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const item = sectors[currentIdx];
+    document.getElementById('progress-text').innerText = item.label + " (" + (currentIdx + 1) + "/" + sectors.length + ")";
+    document.getElementById('question-title').innerText = item.q;
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+
+    item.options.forEach(function(opt) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'option-btn';
+      btn.innerText = opt.text;
+      btn.addEventListener('click', function() {
+        recordAnswer(opt.score, opt.anchor);
+      });
+      container.appendChild(btn);
+    });
+  }
+
+  function recordAnswer(score, anchorTag) {
+    if (anchorTag) {
+      selectedAnchor = anchorTag;
+    }
+    userScores.push({
+      score: score,
+      data: sectors[currentIdx]
+    });
+    currentIdx++;
+    if (currentIdx < sectors.length) {
+      renderQuestion();
+    } else {
+      compileTelemetry();
+    }
+  }
+
+  function getAnchorProtocolTitle() {
+    return selectedAnchor === "BELIEVER"
+      ? "PROTOCOL 05: THE GENESIS CALIBRATION (LOGOS INTERROGATION)"
+      : "PROTOCOL 05: THE SOURCE CODE PING (FALSIFICATION TEST)";
+  }
+
+  function compileTelemetry() {
+    document.getElementById('screen-quiz').classList.add('hidden');
+    document.getElementById('screen-result').classList.remove('hidden');
+
+    sectors[4].protocolTitle = getAnchorProtocolTitle();
+
+    const mapEl = document.getElementById('telemetry-map');
+    mapEl.innerHTML = '';
+    let totalPoints = 0;
+
+    userScores.forEach(function(entry) {
+      totalPoints += entry.score;
+      let bar = '[■■■] NOMINAL (3/3)';
+      let cls = 'status-ok';
+      if (entry.score === 0) {
+        bar = '[□□□] BREACH  (0/3)';
+        cls = 'status-crit';
+      } else if (entry.score === 1) {
+        bar = '[■□□] COMPROMISED (1/3)';
+        cls = 'status-warn';
+      }
+      const row = document.createElement('div');
+      row.className = 'telemetry-row';
+      row.innerHTML = '<span>' + entry.data.shortName + '</span><span class="' + cls + '">' + bar + '</span>';
+      mapEl.appendChild(row);
+    });
+
+    const breached = userScores
+      .filter(function(s) { return s.score < 3; })
+      .sort(function(a, b) {
+        return (a.score - b.score) || (a.data.triagePriority - b.data.triagePriority);
+      });
+
+    const pct = Math.round((totalPoints / 15) * 100);
+    const titleEl = document.getElementById('result-title');
+    const descEl = document.getElementById('result-desc');
+    const secDescEl = document.getElementById('secondary-desc');
+    const prescNameEl = document.getElementById('prescription-name');
+    const prescDescEl = document.getElementById('prescription-desc');
+    const submitBtn = document.getElementById('submit-btn');
+
+    let activeModules = [];
+    let triageMode = "STANDARD_TRIAGE";
+
+    if (totalPoints >= 12) {
+      triageMode = "NOMINAL_TRAP";
+      activeModules = ["MOD_02_SOLITARY", "MOD_05_ANCHOR"];
+
+      titleEl.innerText = "SCORE: " + totalPoints + "/15 (" + pct + "%) // HIGH-DISCIPLINE ANOMALY";
+      descEl.innerText = "EGO BLINDSPOT WARNING: Your surface discipline is intact. In maximum security, the operators who get compromised are the ones who believe their perimeter has zero blind spots.";
+      secDescEl.innerText = "> OVERRIDE DIRECTIVE: Standard triage bypassed. You are being routed to the Advanced Stress-Test Dossier (Modules 02 & 05) to test whether your stillness and foundation survive extreme isolation and source-code interrogation.";
+
+      prescNameEl.innerText = "> ASSIGNED STRESS-TEST MODULES (2-MODULE CAP):";
+      prescDescEl.innerHTML =
+        '<div style="margin-bottom:6px;"><strong>ACTIVE MODULE 01:</strong> ' + sectors[1].protocolTitle + '</div>' +
+        '<div><strong>ACTIVE MODULE 02:</strong> ' + getAnchorProtocolTitle() + '</div>';
+      submitBtn.innerText = "[ UNLOCK ADVANCED STRESS-TEST DOSSIER ]";
+    } else {
+      activeModules = breached.slice(0, 2).map(function(b) { return b.data.id; });
+
+      if (selectedAnchor === "BELIEVER" && activeModules.length === 1 && activeModules[0] !== "MOD_05_ANCHOR") {
+        activeModules.push("MOD_05_ANCHOR");
+      }
+
+      if (breached.length === 1) {
+        const primary = breached[0].data;
+        titleEl.innerText = "SCORE: " + totalPoints + "/15 (" + pct + "%) // ISOLATED BREACH";
+        descEl.innerText = primary.singleDiagnosis;
+      } else {
+        const names = breached.map(function(b) { return b.data.shortName.split('// ')[1]; }).join(", ");
+        titleEl.innerText = "SCORE: " + totalPoints + "/15 (" + pct + "%) // MULTI-SECTOR BREACH";
+        descEl.innerText = "COMPROMISED SECTORS DETECTED: " + names + ". Attempting to repair all " + breached.length + " sectors simultaneously will fracture your focus and guarantee relapse. Your Dossier locks down your two highest-priority emergencies first.";
+      }
+
+      if (selectedAnchor === "BELIEVER") {
+        secDescEl.innerText = "> ALIGNMENT CONTRADICTION DETECTED: You stated submission to an eternal Creator in Sector 05, yet your breaches in other sectors expose a gap between your stated faith and your daily discipline. Module 05 (Logos Interrogation) has been calibrated accordingly.";
+      } else if (breached.length > 2) {
+        secDescEl.innerText = "> TRIAGE CAP ACTIVE: Only your top 2 priority modules are unlocked for immediate execution. " + (breached.length - 2) + " remaining sector(s) are queued for post-lockdown rebuild.";
+      } else {
+        secDescEl.innerText = "> DIRECTIVE: Complete your active module checklists inside the Dossier to unlock remaining sectors.";
+      }
+
+      let queueHtml = "";
+      activeModules.forEach(function(modId, idx) {
+        const secObj = sectors.find(function(s) { return s.id === modId; });
+        queueHtml += '<div style="margin-bottom:6px;"><strong>ACTIVE MODULE 0' + (idx + 1) + ':</strong> ' + secObj.protocolTitle + '</div>';
+      });
+
+      prescNameEl.innerText = "> YOUR ASSIGNED 2-MODULE TRIAGE SEQUENCE:";
+      prescDescEl.innerHTML = queueHtml;
+      submitBtn.innerText = "[ TRANSMIT & OPEN CUSTOM DOSSIER ]";
+    }
+
+    const allBreachIds = breached.map(function(b) { return b.data.id; }).join(',');
+    document.getElementById('active-modules-input').value = activeModules.join(',');
+    document.getElementById('breach-list-input').value = allBreachIds || 'NONE';
+    document.getElementById('anchor-type-input').value = selectedAnchor;
+    document.getElementById('triage-mode-input').value = triageMode;
+    document.getElementById('total-score-input').value = totalPoints;
+  }
+
+  async function handleCapture(e) {
+    e.preventDefault();
+    const email = document.getElementById('user-email').value.trim();
+    const activeMods = document.getElementById('active-modules-input').value;
+    const breaches = document.getElementById('breach-list-input').value;
+    const anchor = document.getElementById('anchor-type-input').value;
+    const mode = document.getElementById('triage-mode-input').value;
+    const score = document.getElementById('total-score-input').value;
+    const submitBtn = document.getElementById('submit-btn');
+
+    submitBtn.disabled = true;
+    submitBtn.innerText = "[ COMPILING CUSTOM DOSSIER... ]";
+
+    const numericScore = parseInt(score, 10) || 0;
+    const userGroup = (numericScore >= 12) ? "ADVANCED_OPERATOR" : "TRIAGE_PATIENT";
+    const dossierParams = "score=" + encodeURIComponent(score) +
+                          "&active=" + encodeURIComponent(activeMods) +
+                          "&breaches=" + encodeURIComponent(breaches) +
+                          "&anchor=" + encodeURIComponent(anchor) +
+                          "&mode=" + encodeURIComponent(mode);
+    const dossierUrl = window.location.origin + window.location.pathname.replace(/index(\.html|\.txt\.html)?$/i, '') + "dossier.html?" + dossierParams;
+
+    try {
+      localStorage.removeItem('architect_checks_v6');
+      localStorage.setItem('architect_telemetry_v6', JSON.stringify({
+        email: email,
+        score: score,
+        active: activeMods,
+        breaches: breaches,
+        anchor: anchor,
+        mode: mode,
+        dossierUrl: dossierUrl,
+        userGroup: userGroup,
+        timestamp: new Date().toISOString()
+      }));
+    } catch (err) {}
+
+    if (FORM_ENDPOINT !== "") {
+      try {
+        const payload = new URLSearchParams({
+          email: email,
+          rawScore: score,
+          activeModules: activeMods,
+          breachedSectors: breaches,
+          anchorBranch: anchor,
+          triageMode: mode,
+          dossierUrl: dossierUrl,
+          userGroup: userGroup
+        });
+
+        await fetch(FORM_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: payload.toString()
+        });
+      } catch (networkErr) {
+        console.warn("Telemetry transmission fallback engaged:", networkErr);
+      }
+    }
+
+    window.location.href = "dossier.html?" + dossierParams;
+  }
+</script>
+
+</body>
+</html>
