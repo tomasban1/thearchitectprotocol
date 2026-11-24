@@ -391,7 +391,7 @@
     let activeModules = [];
     let triageMode = "STANDARD_TRIAGE";
 
-    if (totalPoints >= 12) {
+   if (totalPoints >= 12 && !userScores.some(function(s) { return s.score === 0; })) {
       triageMode = "NOMINAL_TRAP";
       activeModules = ["MOD_02_SOLITARY", "MOD_05_ANCHOR"];
 
