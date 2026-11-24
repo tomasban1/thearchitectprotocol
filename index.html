@@ -435,7 +435,7 @@
         queueHtml += '<div style="margin-bottom:6px;"><strong>ACTIVE MODULE 0' + (idx + 1) + ':</strong> ' + secObj.protocolTitle + '</div>';
       });
 
-      prescNameEl.innerText = "> YOUR ASSIGNED 2-MODULE TRIAGE SEQUENCE:";
+      prescNameEl.innerText = activeModules.length;
       prescDescEl.innerHTML = queueHtml;
       submitBtn.innerText = "[ TRANSMIT & OPEN CUSTOM DOSSIER ]";
     }
