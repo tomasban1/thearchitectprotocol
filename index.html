@@ -462,7 +462,7 @@
     submitBtn.innerText = "[ COMPILING CUSTOM DOSSIER... ]";
 
     const numericScore = parseInt(score, 10) || 0;
-    const userGroup = (numericScore >= 12) ? "ADVANCED_OPERATOR" : "TRIAGE_PATIENT";
+    const userGroup = (mode === "NOMINAL_TRAP") ? "ADVANCED_OPERATOR" : "TRIAGE_PATIENT";
     const dossierParams = "score=" + encodeURIComponent(score) +
                           "&active=" + encodeURIComponent(activeMods) +
                           "&breaches=" + encodeURIComponent(breaches) +
