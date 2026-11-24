@@ -435,7 +435,7 @@
         queueHtml += '<div style="margin-bottom:6px;"><strong>ACTIVE MODULE 0' + (idx + 1) + ':</strong> ' + secObj.protocolTitle + '</div>';
       });
 
-      prescNameEl.innerText = 'You need to complete' activeModules.length 'module(s) to unlock the rest.';
+      prescNameEl.innerText = 'You need to complete' + activeModules.length + 'module(s) to unlock the rest.';
       prescDescEl.innerHTML = queueHtml;
       submitBtn.innerText = "[ TRANSMIT & OPEN CUSTOM DOSSIER ]";
     }
