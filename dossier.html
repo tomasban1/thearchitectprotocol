@@ -471,7 +471,7 @@
       directiveEl.textContent = "> ACTIVE TRIAGE CAP: Attempting to repair every compromised sector at once guarantees relapse. Your Dossier has isolated your top " + activeList.length + " priority emergency module(s) below. Execute and check off every active task to unlock your remaining sectors.";
     }
 
-    if (anchor === "BELIEVER" && !isHighScorer && hasOtherBreaches) {
+    if (anchor === "BELIEVER" && mode !== "NOMINAL_TRAP" && hasOtherBreaches) {
       believerWarnEl.classList.remove('hidden');
       believerWarnEl.textContent = "> SECTOR 05 ALIGNMENT CONTRADICTION: You selected Option [D] (Submission to an eternal Creator), yet your diagnostic exposed breaches in your daily discipline. Module 05 below has been configured to Option 2: The Genesis Calibration (Logos Interrogation) to close the gap between your stated faith and your daily habits.";
     }
