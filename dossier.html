@@ -452,7 +452,6 @@
     if (isNaN(numericScore)) {
       numericScore = 4;
     }
-    var isHighScorer = numericScore >= 12;
     var pct = Math.round((numericScore / 15) * 100);
     document.getElementById('score-badge').textContent = "SCORE: " + numericScore + "/15 (" + pct + "%)";
 
